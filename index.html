@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Execution Tracker</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <p class="eyebrow">Daily execution tracker</p>
+        <h1>Show up, check the boxes, track the week.</h1>
+        <p class="hero-copy">
+          A fast daily tracker built to make check-ins easy on your phone.
+        </p>
+      </header>
+
+      <nav class="tab-nav" aria-label="Sections">
+        <button class="tab-button is-active" data-tab-target="today-panel" type="button">
+          Today
+        </button>
+        <button class="tab-button" data-tab-target="week-panel" type="button">Week</button>
+        <button class="tab-button" data-tab-target="scoreboard-panel" type="button">
+          Scoreboard
+        </button>
+        <button class="tab-button" data-tab-target="kpis-panel" type="button">KPIs</button>
+      </nav>
+
+      <main class="layout">
+        <section
+          class="panel panel-today tab-panel is-active"
+          id="today-panel"
+          aria-labelledby="today-heading"
+        >
+          <div class="section-head">
+            <div>
+              <p class="section-label">Today</p>
+              <h2 id="today-heading">Daily execution</h2>
+            </div>
+            <div class="date-picker">
+              <label for="date-input">Date</label>
+              <input id="date-input" type="date" />
+            </div>
+          </div>
+
+          <div class="today-meta">
+            <div class="metric-chip">
+              <span class="metric-label">Daily score</span>
+              <strong id="daily-score">0%</strong>
+            </div>
+            <div class="metric-chip status-chip">
+              <span class="metric-label">Status</span>
+              <strong id="daily-status">Red</strong>
+              <span id="status-dot" class="status-dot status-red" aria-hidden="true"></span>
+            </div>
+            <div class="metric-chip">
+              <span class="metric-label">Completed</span>
+              <strong id="daily-completed">0 / 0</strong>
+            </div>
+          </div>
+
+          <div id="checklist" class="checklist" aria-live="polite"></div>
+
+          <details class="details-card">
+            <summary>Main friction today</summary>
+            <label class="notes-field" for="friction-notes">
+              <span>Optional</span>
+              <textarea
+                id="friction-notes"
+                rows="3"
+                placeholder="What got in the way today?"
+              ></textarea>
+            </label>
+          </details>
+
+          <details class="details-card">
+            <summary>Biggest win today</summary>
+            <label class="notes-field" for="win-notes">
+              <span>Optional</span>
+              <textarea
+                id="win-notes"
+                rows="3"
+                placeholder="What worked especially well?"
+              ></textarea>
+            </label>
+          </details>
+        </section>
+
+        <section class="panel tab-panel" id="week-panel" aria-labelledby="week-heading" hidden>
+          <div class="section-head">
+            <div>
+              <p class="section-label">Week</p>
+              <h2 id="week-heading">Weekly score</h2>
+            </div>
+            <div class="week-range" id="week-range"></div>
+          </div>
+
+          <div class="week-summary">
+            <div class="summary-card">
+              <span class="metric-label">Average</span>
+              <strong id="week-average">0%</strong>
+            </div>
+            <div class="summary-card">
+              <span class="metric-label">Best day</span>
+              <strong id="week-best">-</strong>
+            </div>
+            <div class="summary-card">
+              <span class="metric-label">Days tracked</span>
+              <strong id="days-tracked">0</strong>
+            </div>
+          </div>
+
+          <div id="week-bars" class="week-bars" aria-label="Weekly daily scores"></div>
+        </section>
+
+        <section
+          class="panel tab-panel"
+          id="scoreboard-panel"
+          aria-labelledby="scoreboard-heading"
+          hidden
+        >
+          <div class="section-head">
+            <div>
+              <p class="section-label">Scoreboard</p>
+              <h2 id="scoreboard-heading">Recent performance</h2>
+            </div>
+          </div>
+
+          <div id="scoreboard" class="scoreboard"></div>
+        </section>
+
+        <section class="panel tab-panel" id="kpis-panel" aria-labelledby="kpi-heading" hidden>
+          <div class="section-head">
+            <div>
+              <p class="section-label">KPIs</p>
+              <h2 id="kpi-heading">Execution KPIs</h2>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <article class="kpi-card">
+              <span class="metric-label">Current streak</span>
+              <strong id="kpi-streak">0 days</strong>
+              <p>Consecutive days with at least one completed item.</p>
+            </article>
+            <article class="kpi-card">
+              <span class="metric-label">Perfect days</span>
+              <strong id="kpi-perfect">0</strong>
+              <p>Days where every daily checkbox was completed.</p>
+            </article>
+            <article class="kpi-card">
+              <span class="metric-label">Completion rate</span>
+              <strong id="kpi-rate">0%</strong>
+              <p>Average completion across all tracked days.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
