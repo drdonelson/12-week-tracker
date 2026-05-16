@@ -9,22 +9,22 @@ const dailyItems = [
   {
     id: "ceo-block",
     title: "CEO Block",
-    description: "45–60 min of strategic work: systems, growth, leadership. NOT email or firefighting.",
+    description: "Did you complete 45–60 min of strategic work? Systems, growth, leadership — NOT email or firefighting.",
   },
   {
     id: "workout",
     title: "Workout",
-    description: "20 min minimum. Anything extra is a bonus.",
+    description: "20 min minimum. Walk counts. Floor: any intentional movement.",
   },
   {
-    id: "journal-fuel",
-    title: "Journal & Fuel",
-    description: "Eat aligned with your goals. Write at least 1 positive sentence.",
+    id: "marriage",
+    title: "Marriage Action",
+    description: "1 intentional act toward Jodi: thoughtful text, physical affection, doing something helpful.",
   },
   {
     id: "wellness",
-    title: "Wellness / Breathing",
-    description: "2 min minimum. Reset, breathe, close the day. Floor: 3 breaths.",
+    title: "Breathing / Reset",
+    description: "2 min minimum. Floor: 3 conscious breaths.",
   },
 ];
 
