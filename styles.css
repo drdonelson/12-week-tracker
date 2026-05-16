@@ -375,6 +375,45 @@ textarea {
   line-height: 1.45;
 }
 
+.export-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.export-btn {
+  border: 0;
+  border-radius: 14px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  padding: 14px 22px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.export-status {
+  margin: 10px 0 0;
+  font-size: 0.88rem;
+  color: var(--accent);
+  min-height: 1.4em;
+}
+
+.export-preview {
+  margin: 12px 0 0;
+  padding: 14px;
+  background: rgba(247, 248, 249, 0.9);
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  color: var(--text);
+}
+
 @media (min-width: 700px) {
   body {
     padding: 24px;

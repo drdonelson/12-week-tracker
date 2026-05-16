@@ -9,10 +9,10 @@
   <body>
     <div class="app-shell">
       <header class="hero">
-        <p class="eyebrow">Daily execution tracker</p>
-        <h1>Show up, check the boxes, track the week.</h1>
+        <p class="eyebrow">12 Week Year · Daily execution</p>
+        <h1>Execute consistently, not perfectly.</h1>
         <p class="hero-copy">
-          A fast daily tracker built to make check-ins easy on your phone.
+          85% = WIN. 70% = Warning. Never go to zero — shrink the task, not the day.
         </p>
       </header>
 
@@ -154,6 +154,16 @@
               <strong id="kpi-rate">0%</strong>
               <p>Average completion across all tracked days.</p>
             </article>
+          </div>
+
+          <div class="export-section">
+            <p class="section-label" style="margin-bottom:10px">Data export</p>
+            <button id="export-btn" class="export-btn" type="button">Copy data to clipboard</button>
+            <p id="export-status" class="export-status" aria-live="polite"></p>
+            <details class="details-card" style="margin-top:12px">
+              <summary>Raw data preview</summary>
+              <pre id="export-preview" class="export-preview">No data yet.</pre>
+            </details>
           </div>
         </section>
       </main>

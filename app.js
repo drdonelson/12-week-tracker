@@ -4,27 +4,27 @@ const dailyItems = [
   {
     id: "plan",
     title: "Plan the day",
-    description: "Clarify top priorities before the day gets noisy.",
+    description: "Clarify your top 1–3 priorities before the day gets noisy.",
   },
   {
-    id: "deep-work",
-    title: "Deep work block",
-    description: "Finish one meaningful block of focused work.",
+    id: "ceo-block",
+    title: "CEO Block",
+    description: "45–60 min of strategic work: systems, growth, leadership. NOT email or firefighting.",
   },
   {
-    id: "move",
-    title: "Move your body",
-    description: "Get training, walking, or mobility done.",
+    id: "workout",
+    title: "Workout",
+    description: "20 min minimum. Anything extra is a bonus.",
   },
   {
-    id: "fuel",
-    title: "Fuel well",
-    description: "Keep meals and hydration aligned with the plan.",
+    id: "journal-fuel",
+    title: "Journal & Fuel",
+    description: "Eat aligned with your goals. Write at least 1 positive sentence.",
   },
   {
-    id: "shutdown",
-    title: "Intentional shutdown",
-    description: "Close the day cleanly and set up tomorrow.",
+    id: "wellness",
+    title: "Wellness / Breathing",
+    description: "2 min minimum. Reset, breathe, close the day. Floor: 3 breaths.",
   },
 ];
 
@@ -51,6 +51,9 @@ const elements = {
   kpiStreak: document.getElementById("kpi-streak"),
   kpiPerfect: document.getElementById("kpi-perfect"),
   kpiRate: document.getElementById("kpi-rate"),
+  exportBtn: document.getElementById("export-btn"),
+  exportStatus: document.getElementById("export-status"),
+  exportPreview: document.getElementById("export-preview"),
   tabButtons: [...document.querySelectorAll(".tab-button")],
   tabPanels: [...document.querySelectorAll(".tab-panel")],
 };
@@ -84,6 +87,19 @@ function bindEvents() {
   elements.tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
       setActiveTab(button.dataset.tabTarget);
+      if (button.dataset.tabTarget === "kpis-panel") {
+        renderExportPreview();
+      }
+    });
+  });
+
+  elements.exportBtn.addEventListener("click", () => {
+    const text = buildExportText();
+    navigator.clipboard.writeText(text).then(() => {
+      elements.exportStatus.textContent = "Copied! Paste it wherever you need.";
+      setTimeout(() => { elements.exportStatus.textContent = ""; }, 3000);
+    }).catch(() => {
+      elements.exportStatus.textContent = "Copy failed — use the preview below and copy manually.";
     });
   });
 }
@@ -386,13 +402,13 @@ function updateStatus(score) {
 }
 
 function getStatus(score) {
-  if (score >= 80) {
-    return { label: "Green", className: "status-green" };
+  if (score >= 85) {
+    return { label: "WIN", className: "status-green" };
   }
-  if (score >= 40) {
-    return { label: "Yellow", className: "status-yellow" };
+  if (score >= 70) {
+    return { label: "Warning", className: "status-yellow" };
   }
-  return { label: "Red", className: "status-red" };
+  return { label: "Adjust", className: "status-red" };
 }
 
 function getScoreboardSubtitle(entry) {
@@ -415,4 +431,45 @@ function setActiveTab(targetId) {
     panel.classList.toggle("is-active", isActive);
     panel.hidden = !isActive;
   });
+}
+
+function buildExportText() {
+  const allTracked = Object.entries(state.entries)
+    .filter(([, entry]) => hasAnyActivity(entry))
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  if (!allTracked.length) {
+    return "No tracked data yet.";
+  }
+
+  const lines = ["=== 12 Week Tracker Export ===", `Generated: ${new Date().toLocaleString()}`, ""];
+
+  allTracked.forEach(([date, entry]) => {
+    const score = calculateScore(entry);
+    const status = getStatus(score);
+    lines.push(`Date: ${formatFullDate(date)}  |  Score: ${score}%  |  ${status.label}`);
+    dailyItems.forEach((item) => {
+      lines.push(`  [${entry.items[item.id] ? "x" : " "}] ${item.title}`);
+    });
+    if (entry.win) lines.push(`  Win: ${entry.win}`);
+    if (entry.friction) lines.push(`  Friction: ${entry.friction}`);
+    lines.push("");
+  });
+
+  const totalDays = allTracked.length;
+  const avgScore = Math.round(allTracked.reduce((sum, [, e]) => sum + calculateScore(e), 0) / totalDays);
+  const winDays = allTracked.filter(([, e]) => calculateScore(e) >= 85).length;
+  const zeroDays = allTracked.filter(([, e]) => calculateScore(e) === 0).length;
+
+  lines.push("=== Summary ===");
+  lines.push(`Total tracked days: ${totalDays}`);
+  lines.push(`Average score: ${avgScore}%`);
+  lines.push(`WIN days (85%+): ${winDays} of ${totalDays}`);
+  lines.push(`Zero days: ${zeroDays}`);
+
+  return lines.join("\n");
+}
+
+function renderExportPreview() {
+  elements.exportPreview.textContent = buildExportText();
 }
