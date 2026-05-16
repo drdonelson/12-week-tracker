@@ -1,6 +1,7 @@
 const STORAGE_KEY = "execution-tracker-v1";
+const ITEMS_KEY = "execution-tracker-items-v1";
 
-const dailyItems = [
+const DEFAULT_ITEMS = [
   {
     id: "plan",
     title: "Plan the day",
@@ -28,6 +29,8 @@ const dailyItems = [
   },
 ];
 
+let dailyItems = loadItems();
+
 const state = {
   selectedDate: todayKey(),
   entries: loadEntries(),
@@ -54,6 +57,10 @@ const elements = {
   exportBtn: document.getElementById("export-btn"),
   exportStatus: document.getElementById("export-status"),
   exportPreview: document.getElementById("export-preview"),
+  settingsItems: document.getElementById("settings-items"),
+  settingsSaveBtn: document.getElementById("settings-save-btn"),
+  settingsStatus: document.getElementById("settings-status"),
+  settingsResetBtn: document.getElementById("settings-reset-btn"),
   tabButtons: [...document.querySelectorAll(".tab-button")],
   tabPanels: [...document.querySelectorAll(".tab-panel")],
 };
@@ -90,6 +97,9 @@ function bindEvents() {
       if (button.dataset.tabTarget === "kpis-panel") {
         renderExportPreview();
       }
+      if (button.dataset.tabTarget === "settings-panel") {
+        renderSettingsForm();
+      }
     });
   });
 
@@ -102,6 +112,78 @@ function bindEvents() {
       elements.exportStatus.textContent = "Copy failed — use the preview below and copy manually.";
     });
   });
+
+  elements.settingsSaveBtn.addEventListener("click", () => {
+    saveSettingsForm();
+  });
+
+  elements.settingsResetBtn.addEventListener("click", () => {
+    if (confirm("Reset all items back to defaults? Your tracking history won't be affected.")) {
+      localStorage.removeItem(ITEMS_KEY);
+      dailyItems = loadItems();
+      renderChecklist();
+      render();
+      renderSettingsForm();
+      elements.settingsStatus.textContent = "Reset to defaults.";
+      setTimeout(() => { elements.settingsStatus.textContent = ""; }, 3000);
+    }
+  });
+}
+
+function renderSettingsForm() {
+  elements.settingsItems.innerHTML = "";
+
+  dailyItems.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "settings-row";
+    row.innerHTML = `
+      <div class="settings-num">${index + 1}</div>
+      <div class="settings-fields">
+        <label class="settings-field-label" for="s-title-${index}">Item name</label>
+        <input
+          class="settings-input"
+          id="s-title-${index}"
+          type="text"
+          value="${escapeAttr(item.title)}"
+          maxlength="60"
+          placeholder="Item name"
+          data-item-index="${index}"
+          data-field="title"
+        />
+        <label class="settings-field-label" for="s-desc-${index}" style="margin-top:8px">Description / floor minimum</label>
+        <input
+          class="settings-input"
+          id="s-desc-${index}"
+          type="text"
+          value="${escapeAttr(item.description)}"
+          maxlength="120"
+          placeholder="Short description or floor minimum"
+          data-item-index="${index}"
+          data-field="description"
+        />
+      </div>
+    `;
+    elements.settingsItems.appendChild(row);
+  });
+}
+
+function saveSettingsForm() {
+  const updated = dailyItems.map((item, index) => {
+    const titleEl = document.getElementById(`s-title-${index}`);
+    const descEl = document.getElementById(`s-desc-${index}`);
+    return {
+      ...item,
+      title: (titleEl ? titleEl.value.trim() : item.title) || item.title,
+      description: descEl ? descEl.value.trim() : item.description,
+    };
+  });
+
+  localStorage.setItem(ITEMS_KEY, JSON.stringify(updated));
+  dailyItems = updated;
+  renderChecklist();
+  render();
+  elements.settingsStatus.textContent = "Saved!";
+  setTimeout(() => { elements.settingsStatus.textContent = ""; }, 2000);
 }
 
 function renderChecklist() {
@@ -123,7 +205,7 @@ function renderChecklist() {
 
     const copy = document.createElement("div");
     copy.className = "check-copy";
-    copy.innerHTML = `<strong>${item.title}</strong><span>${item.description}</span>`;
+    copy.innerHTML = `<strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span>`;
 
     label.append(checkbox, copy);
     elements.checklist.appendChild(label);
@@ -156,7 +238,6 @@ function renderWeek() {
     date,
     entry: getEntry(date),
   }));
-  const scores = weekEntries.map(({ entry }) => calculateScore(entry));
   const trackedDays = weekEntries.filter(({ entry }) => hasAnyActivity(entry)).length;
   const average = trackedDays
     ? Math.round(
@@ -348,6 +429,22 @@ function saveEntries() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
 }
 
+function loadItems() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(ITEMS_KEY));
+    if (Array.isArray(saved) && saved.length === DEFAULT_ITEMS.length) {
+      return saved.map((savedItem, index) => ({
+        id: DEFAULT_ITEMS[index].id,
+        title: savedItem.title || DEFAULT_ITEMS[index].title,
+        description: savedItem.description !== undefined ? savedItem.description : DEFAULT_ITEMS[index].description,
+      }));
+    }
+  } catch (error) {
+    // fall through
+  }
+  return DEFAULT_ITEMS.map((item) => ({ ...item }));
+}
+
 function todayKey() {
   return toKey(new Date());
 }
@@ -472,4 +569,16 @@ function buildExportText() {
 
 function renderExportPreview() {
   elements.exportPreview.textContent = buildExportText();
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeAttr(str) {
+  return String(str).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }

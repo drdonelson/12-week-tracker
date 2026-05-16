@@ -17,14 +17,11 @@
       </header>
 
       <nav class="tab-nav" aria-label="Sections">
-        <button class="tab-button is-active" data-tab-target="today-panel" type="button">
-          Today
-        </button>
+        <button class="tab-button is-active" data-tab-target="today-panel" type="button">Today</button>
         <button class="tab-button" data-tab-target="week-panel" type="button">Week</button>
-        <button class="tab-button" data-tab-target="scoreboard-panel" type="button">
-          Scoreboard
-        </button>
+        <button class="tab-button" data-tab-target="scoreboard-panel" type="button">Scores</button>
         <button class="tab-button" data-tab-target="kpis-panel" type="button">KPIs</button>
+        <button class="tab-button" data-tab-target="settings-panel" type="button">Settings</button>
       </nav>
 
       <main class="layout">
@@ -51,7 +48,7 @@
             </div>
             <div class="metric-chip status-chip">
               <span class="metric-label">Status</span>
-              <strong id="daily-status">Red</strong>
+              <strong id="daily-status">Adjust</strong>
               <span id="status-dot" class="status-dot status-red" aria-hidden="true"></span>
             </div>
             <div class="metric-chip">
@@ -164,6 +161,27 @@
               <summary>Raw data preview</summary>
               <pre id="export-preview" class="export-preview">No data yet.</pre>
             </details>
+          </div>
+        </section>
+
+        <section class="panel tab-panel" id="settings-panel" aria-labelledby="settings-heading" hidden>
+          <div class="section-head">
+            <div>
+              <p class="section-label">Settings</p>
+              <h2 id="settings-heading">Your daily items</h2>
+            </div>
+          </div>
+
+          <p class="settings-intro">
+            Rename any item to match your own goals. Your changes are saved on this device only.
+          </p>
+
+          <div id="settings-items" class="settings-items"></div>
+
+          <div class="settings-actions">
+            <button id="settings-save-btn" class="export-btn" type="button">Save items</button>
+            <p id="settings-status" class="export-status" aria-live="polite"></p>
+            <button id="settings-reset-btn" class="reset-btn" type="button">Reset to defaults</button>
           </div>
         </section>
       </main>

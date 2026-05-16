@@ -73,8 +73,8 @@ body {
   top: 8px;
   z-index: 10;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
   margin-bottom: 14px;
   padding: 8px;
   border: 1px solid var(--line);
@@ -91,7 +91,9 @@ body {
   color: var(--muted);
   font: inherit;
   font-weight: 600;
-  padding: 12px 8px;
+  font-size: 0.88rem;
+  padding: 12px 4px;
+  cursor: pointer;
 }
 
 .tab-button.is-active {
@@ -414,6 +416,85 @@ textarea {
   color: var(--text);
 }
 
+.settings-intro {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.settings-items {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.settings-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(31, 41, 51, 0.08);
+  background: rgba(248, 250, 252, 0.96);
+}
+
+.settings-num {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.settings-fields {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+
+.settings-field-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.settings-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.settings-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.reset-btn {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
 @media (min-width: 700px) {
   body {
     padding: 24px;
@@ -424,7 +505,7 @@ textarea {
   }
 
   .tab-nav {
-    max-width: 620px;
+    max-width: 680px;
   }
 
   .panel {
